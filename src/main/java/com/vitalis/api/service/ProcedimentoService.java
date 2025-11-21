@@ -52,6 +52,12 @@ public class ProcedimentoService {
                 .collect(Collectors.toList());
     }
 
+    public ProcedimentoResponseDTO buscarPorId(Long id) {
+        Procedimento procedimento = procedimentoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Procedimento não encontrado com ID: " + id));
+        return toResponseDTO(procedimento);
+    }
+
     private ProcedimentoResponseDTO toResponseDTO(Procedimento procedimento) {
         ProcedimentoResponseDTO dto = modelMapper.map(procedimento, ProcedimentoResponseDTO.class);
         dto.setClinicaId(procedimento.getClinica().getId());
