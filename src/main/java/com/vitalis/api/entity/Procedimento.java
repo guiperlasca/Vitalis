@@ -31,6 +31,7 @@ public class Procedimento {
     @Column(nullable = false)
     private Integer duracaoEstimadaMinutos;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean disponivel = true;
 

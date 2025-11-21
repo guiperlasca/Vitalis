@@ -24,16 +24,23 @@ public class Paciente {
     private String nome;
 
     @Column(nullable = false, unique = true)
+    private String cpf;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String telefone;
+
+    @Column(nullable = false)
+    private java.time.LocalDate dataNascimento;
 
     private String endereco;
 
     @Column(columnDefinition = "TEXT")
     private String historicoMedico;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean ativo = true;
 

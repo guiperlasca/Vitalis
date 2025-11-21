@@ -26,6 +26,7 @@ public class ProcedimentoRequestDTO {
     @NotNull(message = "A duração estimada é obrigatória")
     private Integer duracaoEstimadaMinutos;
 
+    @Builder.Default
     private boolean disponivel = true;
 
     @NotNull(message = "O ID da clínica é obrigatório")

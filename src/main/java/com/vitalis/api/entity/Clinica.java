@@ -34,6 +34,7 @@ public class Clinica {
 
     private Double avaliacao;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean ativo = true;
 

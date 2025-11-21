@@ -31,6 +31,7 @@ public class Agendamento {
     @JoinColumn(name = "clinica_id", nullable = false)
     private Clinica clinica;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "agendamento_procedimentos", joinColumns = @JoinColumn(name = "agendamento_id"), inverseJoinColumns = @JoinColumn(name = "procedimento_id"))
     private List<Procedimento> procedimentos = new ArrayList<>();
