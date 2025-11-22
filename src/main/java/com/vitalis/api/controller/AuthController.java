@@ -28,6 +28,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final JwtUtil jwtUtil;
+    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
     @PostMapping("/login")
     @Operation(summary = "Autenticar usuário e gerar token JWT")
@@ -35,7 +36,7 @@ public class AuthController {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
 
-        final UserDetails userDetails = authService.loadUserByUsername(request.getEmail());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         final String jwt = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(AuthResponseDTO.builder().token(jwt).build());

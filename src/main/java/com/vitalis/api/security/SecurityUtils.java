@@ -28,7 +28,7 @@ public class SecurityUtils {
 
     public boolean isAdmin() {
         Usuario user = getCurrentUser();
-        return user.getRole() == UserRole.ADMIN;
+        return user.getRole() == UserRole.ROLE_ADMIN;
     }
 
     // Exemplo de verificação de dono de clínica (lógica simplificada, precisaria
@@ -38,6 +38,6 @@ public class SecurityUtils {
     public boolean isDonoDaClinica(Long clinicaId) {
         Usuario user = getCurrentUser();
         // TODO: Implementar lógica real verificando se o usuário é dono da clínica ID
-        return user.getRole() == UserRole.CLINICA;
+        return user.getRole() == UserRole.ROLE_CLINICA;
     }
 }

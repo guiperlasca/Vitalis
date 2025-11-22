@@ -78,7 +78,7 @@ public class AgendamentoService {
         Usuario usuarioLogado = securityUtils.getCurrentUser();
         List<Agendamento> agendamentos;
 
-        if (usuarioLogado.getRole() == UserRole.PACIENTE) {
+        if (usuarioLogado.getRole() == UserRole.ROLE_PACIENTE) {
             Paciente paciente = pacienteRepository.findByEmail(usuarioLogado.getEmail())
                     .orElseThrow(() -> new EntityNotFoundException("Perfil de paciente não encontrado."));
             agendamentos = agendamentoRepository.findByPacienteId(paciente.getId());

@@ -1,7 +1,7 @@
 package com.vitalis.api.entity;
 
 public enum UserRole {
-    ADMIN,
-    PACIENTE,
-    CLINICA
+    ROLE_PACIENTE,
+    ROLE_CLINICA,
+    ROLE_ADMIN
 }
