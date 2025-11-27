@@ -7,6 +7,8 @@ import { MeusAgendamentos } from './pages/MeusAgendamentos';
 import { Gestao } from './pages/Gestao';
 import { AdminLogin } from './pages/AdminLogin';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { RequestTester } from './pages/RequestTester';
+import { ProntuarioPaciente } from './pages/ProntuarioPaciente';
 
 function App() {
   return (
@@ -25,6 +27,14 @@ function App() {
             }
           />
           <Route
+            path="/prontuario"
+            element={
+              <PrivateRoute allowedRoles={['ROLE_PACIENTE']}>
+                <ProntuarioPaciente />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/gestao"
             element={
               <PrivateRoute allowedRoles={['ROLE_CLINICA']}>
@@ -37,6 +47,14 @@ function App() {
             element={
               <PrivateRoute allowedRoles={['ROLE_ADMIN']}>
                 <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/tester"
+            element={
+              <PrivateRoute allowedRoles={['ROLE_ADMIN']}>
+                <RequestTester />
               </PrivateRoute>
             }
           />

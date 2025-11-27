@@ -21,7 +21,7 @@ public class AgendamentoResponseDTO {
     private String clinicaNomeFantasia;
     private List<ProcedimentoResponseDTO> procedimentos;
 
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataHora;
 
     private BigDecimal valorTotal;

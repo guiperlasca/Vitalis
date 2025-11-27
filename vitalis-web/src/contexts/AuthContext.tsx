@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, type ReactNode } from 'react';
 import api from '../services/api';
 
 interface User {
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-    
+
     try {
       const payload = JSON.parse(atob(newToken.split('.')[1]));
       setUser({ sub: payload.sub, role: payload.role });

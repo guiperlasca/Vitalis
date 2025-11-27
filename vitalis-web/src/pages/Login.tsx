@@ -180,7 +180,7 @@ export function Login() {
           <div className="text-center text-sm text-secondary-500 mt-6">
             <p>Credenciais de teste:</p>
             <p className="font-mono bg-secondary-50 p-2 rounded mt-2">
-              paciente@vitalis.com / senha123
+              joao@email.com / 123456
             </p>
           </div>
         </motion.div>

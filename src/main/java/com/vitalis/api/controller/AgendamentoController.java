@@ -47,25 +47,10 @@ public class AgendamentoController {
     @PreAuthorize("hasRole('CLINICA') or hasRole('ADMIN')")
     @Operation(summary = "Listar agendamentos de uma clínica")
     public ResponseEntity<List<AgendamentoResponseDTO>> listarAgendamentosPorClinica(@PathVariable Long clinicaId) {
-        // Note: AgendamentoService needs to implement listarAgendamentosPorClinica if
-        // not already present.
-        // Checking AgendamentoService... it seems it was not fully implemented in the
-        // previous context for 'listarAgendamentosPorClinica'.
-        // I will assume for now I should use a method that exists or I might need to
-        // add it.
-        // Wait, looking at the previous 'AgendamentoService' content I read, it ONLY
-        // has 'listarMeusAgendamentos'.
-        // It DOES NOT have 'listarAgendamentosPorClinica'.
-        // I need to add 'listarAgendamentosPorClinica' to AgendamentoService as well to
-        // match the controller I wrote in the plan.
-        // For now, I will comment this out or implement it in the service.
-        // The user asked to "revise a aplicação", so I should fix this.
-        // I will add the method to the service in the next step.
-        // For this file, I will keep the endpoint but maybe comment out the service
-        // call if it doesn't exist,
-        // OR better, I will fix the Service right after this.
-        // Let's assume I will fix the service.
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        List<AgendamentoResponseDTO> agendamentos = agendamentoService.listarAgendamentosPorClinica(clinicaId);
+        // Populate Prontuario info
+        agendamentos.forEach(a -> a.setProntuario(prontuarioService.buscarPorAgendamento(a.getId())));
+        return ResponseEntity.ok(agendamentos);
     }
 
     @PatchMapping("/{id}/status")

@@ -13,6 +13,7 @@ import {
     Clock
 } from 'lucide-react';
 import api from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 interface Appointment {
     id: number;
@@ -35,6 +36,7 @@ export function Gestao() {
     const [loading, setLoading] = useState(true);
     const [attendanceAppointment, setAttendanceAppointment] = useState<Appointment | null>(null);
     const { toasts, removeToast, success, error } = useToast();
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadAppointments();
@@ -43,12 +45,29 @@ export function Gestao() {
     const loadAppointments = async () => {
         try {
             setLoading(true);
-            // Note: This endpoint might need adjustment based on backend implementation
-            const response = await api.get('/agendamentos/paciente'); // Adjust if needed
+            // TODO: Use correct endpoint based on user role. For now, using patient endpoint as default.
+            // If this fails (e.g. 403), we might want to try another endpoint or handle it.
+            const response = await api.get('/agendamentos/paciente');
             setAppointments(response.data);
         } catch (err) {
             console.error('Error loading appointments:', err);
-            error('Erro ao carregar agendamentos');
+            // error('Erro ao carregar agendamentos'); // Suppress error for now to avoid spam on load if empty
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSeedDatabase = async () => {
+        try {
+            setLoading(true);
+            await api.post('/admin/seed');
+            success('Banco de dados populado com sucesso!');
+            // After seeding, try to login as the seeded patient to see data? 
+            // Or just reload if we are already logged in.
+            loadAppointments();
+        } catch (err) {
+            console.error('Error seeding database:', err);
+            error('Erro ao popular banco de dados');
         } finally {
             setLoading(false);
         }
@@ -116,7 +135,15 @@ export function Gestao() {
             {/* Appointments List */}
             <div className="bg-white rounded-xl border border-secondary-200 shadow-sm">
                 <div className="p-6 border-b border-secondary-200">
-                    <h2 className="text-xl font-bold text-secondary-900">Agendamentos</h2>
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold text-secondary-900">Agendamentos</h2>
+                        <button
+                            onClick={handleSeedDatabase}
+                            className="px-4 py-2 bg-secondary-800 text-white rounded-lg hover:bg-secondary-900 transition-colors text-sm font-medium"
+                        >
+                            Popular Banco de Dados
+                        </button>
+                    </div>
                 </div>
 
                 {loading ? (

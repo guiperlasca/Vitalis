@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, DollarSign, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { AuthContext } from '../contexts/AuthContext';
+import { useToast } from '../hooks/useToast';
 
 interface Procedure {
     id: number;
@@ -28,6 +31,10 @@ export function AppointmentModal({ isOpen, onClose, clinicId, clinicName, onSucc
     const [loading, setLoading] = useState(false);
     const [loadingProcedures, setLoadingProcedures] = useState(true);
 
+    const { isAuthenticated } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { error } = useToast();
+
     useEffect(() => {
         if (isOpen) {
             loadProcedures();
@@ -37,7 +44,7 @@ export function AppointmentModal({ isOpen, onClose, clinicId, clinicName, onSucc
     const loadProcedures = async () => {
         try {
             setLoadingProcedures(true);
-            const response = await api.get(`/procedimentos/clinica/${clinicId}`);
+            const response = await api.get(`/clinicas/${clinicId}/procedimentos`);
             setProcedures(response.data);
         } catch (error) {
             console.error('Error loading procedures:', error);
@@ -57,21 +64,43 @@ export function AppointmentModal({ isOpen, onClose, clinicId, clinicName, onSucc
         .reduce((sum, p) => sum + p.preco, 0);
 
     const handleSubmit = async () => {
+        if (!isAuthenticated) {
+            error('Você precisa estar logado para agendar uma consulta.');
+            onClose();
+            navigate('/login');
+            return;
+        }
+
         if (selectedProcedures.length === 0 || !dateTime) return;
 
         try {
             setLoading(true);
-            await api.post('/agendamentos', {
+            const payload = {
                 clinicaId: clinicId,
                 procedimentoIds: selectedProcedures,
                 dataHora: dateTime,
                 observacoes
-            });
+            };
+            console.log('Sending appointment payload:', payload);
+
+            await api.post('/agendamentos', payload);
+
             onSuccess();
             handleClose();
-        } catch (error) {
-            console.error('Error creating appointment:', error);
-            throw error;
+            navigate('/meus-agendamentos');
+        } catch (err: any) {
+            console.error('Error creating appointment:', err);
+            if (err.response) {
+                console.error('Error response data:', err.response.data);
+                console.error('Error response status:', err.response.status);
+                if (err.response.data.errors) {
+                    error(err.response.data.errors.map((e: any) => e.defaultMessage).join(', '));
+                } else {
+                    error(err.response.data.message || 'Erro ao agendar consulta.');
+                }
+            } else {
+                error('Erro ao agendar consulta. Tente novamente.');
+            }
         } finally {
             setLoading(false);
         }

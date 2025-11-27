@@ -26,7 +26,7 @@ public class AgendamentoRequestDTO {
 
     @NotNull(message = "A data e hora são obrigatórias")
     @Future(message = "A data do agendamento deve ser no futuro")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dataHora;
 
     private String observacoes;
